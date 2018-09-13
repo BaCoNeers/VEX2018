@@ -42,7 +42,7 @@
 #include "JoystickDriver.c"
 #define sign(value) (value >= 0 ? 1 : -1)
 #define max(a,b) (a > b ? a : b)
-#define controller_launch_forwards Btn5UXmtr2
+#define controller_launch_forwards Btn5U
 #define controller_launch_backwards Btn5DXmtr2
 #define controller_drive_left Ch3
 #define controller_drive_right Ch2
