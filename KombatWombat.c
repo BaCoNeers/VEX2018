@@ -12,8 +12,8 @@
 
 #define LaunchForwards Btn5U
 #define LaunchBackwards Btn5D
-#define DriveLeft Ch3
-#define DriveRight Ch2
+#define DriveForward Ch3
+#define DriveSteer Ch1
 #define ArmUp Btn6U
 #define ArmDown Btn6D
 #define HarvesterToggle Btn7UXmtr2
@@ -22,6 +22,10 @@
 #define ClawRotateRight Btn8RXmtr2
 #define ClawPitchUp Btn8UXmtr2
 #define ClawPitchDown Btn8DXmtr2
+
+#define sign(value) (value >= 0 ? 1 : -1)
+#define max(a,b) (a > b ? a : b)
+
 
 ///////////Variables///////////
 bool LastButtonState = false;
@@ -33,6 +37,53 @@ void SetLiftPower(int power){
 
 }
 
+///////////Drive///////////
+float get_power_forward(float controller_input)
+{
+	float controller_sign = sign(controller_input);
+	float new_input = controller_input * controller_sign;
+
+	new_input = max(0.0, new_input - 0.15) / (1.0 - 0.15);
+	return controller_sign * new_input;
+}
+
+float get_power_turning(float controller_input)
+{
+	float controller_sign = sign(controller_input);
+	float new_input = controller_input * controller_sign;
+
+	new_input = max(0.0, new_input - 0.15) / (1.0 - 0.15);
+	return controller_sign * new_input;
+}
+
+float get_joystick_axis(int index)
+{
+	float maximum_range = vexRT[index] > 0 ? -127.0 : -128.0;
+	float joy_pos = (float)vexRT[index];
+	return joy_pos / maximum_range;
+}
+
+void set_motor_speed(int _motor, float speed)
+{
+	if (speed > 1.0) speed = 1.0;
+	if (speed < -1.0) speed = -1.0;
+	int maximum_speed = 127;
+	int motor_speed = maximum_speed * speed;
+	motor[_motor] = motor_speed;
+}
+
+void update_drive () {
+	float forward_power = get_power_forward(get_joystick_axis(DriveForward));
+	float steer_power = get_power_turning(get_joystick_axis(DriveSteer));
+
+	float left_power = forward_power + steer_power;
+	float right_power = forward_power - steer_power;
+
+	set_motor_speed(left_drive, left_power);
+	set_motor_speed(right_drive, right_power);
+}
+
+
 task main()
 {
 	while(true)
@@ -41,6 +92,8 @@ task main()
 		bool BtnArmUp = (bool)vexRT[ArmUp];
 		bool BtnArmDown = (bool)vexRT[ArmDown];
 		bool BtnShooter = (bool)vexRT[LaunchForwards];
+
+		update_drive();
 
 		//////ArmLift//////
 		if (BtnArmUp){
