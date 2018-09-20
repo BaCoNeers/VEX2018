@@ -2,8 +2,8 @@
 #pragma config(Sensor, dgtl2,  driveEncoderLeft, sensorQuadEncoder)
 #pragma config(Sensor, dgtl4,  driveEncoderRight, sensorQuadEncoder)
 #pragma config(Motor,  port1,           harvester_1,   tmotorVex393_HBridge, openLoop, reversed)
-#pragma config(Motor,  port2,           left_drive,    tmotorVex393_MC29, openLoop, reversed)
-#pragma config(Motor,  port3,           right_drive,   tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port2,           left_drive,    tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port3,           right_drive,   tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port4,           launch_motor_1, tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port5,           launch_motor_2, tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port6,           claw_roll,     tmotorVex393_MC29, openLoop)
@@ -75,6 +75,13 @@ float get_joystick_axis(int index)
 	return joy_pos / maximum_range;
 }
 
+/* float get_joystick_axis_y(int index)
+{
+	float maximum_range = vexRT[index] > 0 ? -127.0 : -128.0;
+	float joy_pos = (float)vexRT[index];
+	return joy_pos / maximum_range;
+} */
+
 void set_motor_speed(int _motor, float speed)
 {
 	if (speed > 1.0) speed = 1.0;
@@ -85,8 +92,8 @@ void set_motor_speed(int _motor, float speed)
 }
 
 void update_drive () {
-	float forward_power = get_power(get_joystick_axis(DriveSteer));
-	float steer_power = get_power(get_joystick_axis(DriveForward));
+	float forward_power = get_power(get_joystick_axis(DriveForward));
+	float steer_power = get_power(get_joystick_axis(DriveSteer));
 
 	float left_power = forward_power + steer_power;
 	float right_power = forward_power - steer_power;
