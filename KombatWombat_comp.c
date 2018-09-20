@@ -105,20 +105,73 @@ void update_drive () {
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
+//Autonomous varables
+float circumferenceWheel = 0.886;
+float RobotOneDeg = 3.403;
+int LeftEncorderCount = 0;
+int RightEncoderCount = 0;
+
+void MoveForward(float distanceMM){
+	bool state = false;
+	int NumCounts = (int)(distanceMM/circumferenceWheel);
+	int direction = 1;
+	if(distanceMM < 0){
+		direction = -1;
+	}
+	while (state){
+		LeftEncorderCount = SensorValue[driveEncoderLeft];
+		RightEncoderCount = SensorValue[driveEncoderRight];
+		if(NumCounts<(LeftEncorderCount+RightEncoderCount)/2<NumCounts){
+			motor[left_drive] = 60*direction;
+			motor[right_drive] = 60*direction;
+		}
+		else{
+			motor[left_drive] = 0;
+			motor[right_drive] = 0;
+			SensorValue[driveEncoderLeft] = 0;
+			SensorValue[driveEncoderRight] = 0;
+			state = false;
+		}
+	}
+}
+void TurnRobot(int degree){
+	float turingDistance = degrees*RobotOneDeg;
+	int NumCounts = (int)(turingDistance/circumferenceWheel);
+	bool state = false;
+	while (state){
+		LeftEncorderCount = SensorValue[driveEncoderLeft];
+		RightEncoderCount = SensorValue[driveEncoderRight];
+		if(LeftEncorderCount < NumCounts){
+			motor[left_drive] = 60;
+			motor[right_drive] = -60;
+		}
+		else{
+			motor[left_drive] = 0;
+			motor[right_drive] = 0;
+			SensorValue[driveEncoderLeft] = 0;
+			SensorValue[driveEncoderRight] = 0;
+			state = false;
+		}
+	}
+}
+
 void pre_auton()
 {
-  // Set bStopTasksBetweenModes to false if you want to keep user created tasks
-  // running between Autonomous and Driver controlled modes. You will need to
-  // manage all user created tasks if set to false.
-  bStopTasksBetweenModes = true;
+	// Set bStopTasksBetweenModes to false if you want to keep user created tasks
+	// running between Autonomous and Driver controlled modes. You will need to
+	// manage all user created tasks if set to false.
+	bStopTasksBetweenModes = true;
 
 	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
 	// used by the competition include file, for example, you might want
 	// to display your team name on the LCD in this function.
 	// bDisplayCompetitionStatusOnLcd = false;
 
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
+	// All activities that occur before the competition starts
+	// Example: clearing encoders, setting servo positions, ...
+
+
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -133,12 +186,12 @@ void pre_auton()
 
 task autonomous()
 {
-  // ..........................................................................
-  // Insert user code here.
-  // ..........................................................................
+	// ..........................................................................
+	// Insert user code here.
+	// ..........................................................................
 
-  // Remove this function call once you have "real" code.
-  AutonomousCodePlaceholderForTesting();
+	// Remove this function call once you have "real" code.
+	AutonomousCodePlaceholderForTesting();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -153,20 +206,20 @@ task autonomous()
 
 task usercontrol()
 {
-  // User control code here, inside the loop
+	// User control code here, inside the loop
 
-  while (true)
-  {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+	while (true)
+	{
+		// This is the main execution loop for the user control program.
+		// Each time through the loop your program should update motor + servo
+		// values based on feedback from the joysticks.
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
+		// ........................................................................
+		// Insert user code here. This is where you use the joystick values to
+		// update your motors, etc.
+		// ........................................................................
 
-    ////Assign Button///////
+		////Assign Button///////
 		bool BtnArmUp = (bool)vexRT[ArmUp];
 		bool BtnArmDown = (bool)vexRT[ArmDown];
 
@@ -201,5 +254,5 @@ task usercontrol()
 			SetLiftPower(0);
 		}
 
-  }
+	}
 }
