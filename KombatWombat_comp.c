@@ -128,7 +128,7 @@ void MoveForward(float distanceMM){
 	while (state){
 		LeftEncorderCount = SensorValue[driveEncoderLeft];
 		RightEncoderCount = SensorValue[driveEncoderRight];
-		if(NumCounts<(LeftEncorderCount+RightEncoderCount)/2<NumCounts){
+		if((LeftEncorderCount+RightEncoderCount)/2<NumCounts*direction){
 			motor[left_drive] = 60*direction;
 			motor[right_drive] = 60*direction;
 		}
@@ -144,13 +144,17 @@ void MoveForward(float distanceMM){
 void TurnRobot(int degree){
 	float turingDistance = degrees*RobotOneDeg;
 	int NumCounts = (int)(turingDistance/circumferenceWheel);
+	int direction = 1;
+	if(degree<0){
+		direction = -1;
+	}
 	bool state = false;
 	while (state){
 		LeftEncorderCount = SensorValue[driveEncoderLeft];
 		RightEncoderCount = SensorValue[driveEncoderRight];
-		if(LeftEncorderCount < NumCounts){
-			motor[left_drive] = 60;
-			motor[right_drive] = -60;
+		if(LeftEncorderCount < NumCounts*direction){
+			motor[left_drive] = 60*direction;
+			motor[right_drive] = -60*direction;
 		}
 		else{
 			motor[left_drive] = 0;
