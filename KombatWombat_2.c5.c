@@ -21,6 +21,7 @@
 #define ClawPitchUp Btn8UXmtr2
 #define ClawPitchDown Btn8DXmtr2
 
+///////////Macros///////////
 #define sign(value) (value >= 0 ? 1 : -1)
 #define max(a,b) (a > b ? a : b)
 
@@ -36,16 +37,8 @@ void SetLiftPower(int power){
 }
 
 ///////////Drive///////////
-float get_power_forward(float controller_input)
-{
-	float controller_sign = sign(controller_input);
-	float new_input = controller_input * controller_sign;
 
-	new_input = max(0.0, new_input - 0.15) / (1.0 - 0.15);
-	return controller_sign * new_input;
-}
-
-float get_power_turning(float controller_input)
+float get_power(float controller_input)
 {
 	float controller_sign = sign(controller_input);
 	float new_input = controller_input * controller_sign;
@@ -56,7 +49,7 @@ float get_power_turning(float controller_input)
 
 float get_joystick_axis(int index)
 {
-	float maximum_range = vexRT[index] > 0 ? -127.0 : -128.0;
+	float maximum_range = vexRT[index] > 0 ? 127.0 : 128.0;
 	float joy_pos = (float)vexRT[index];
 	return joy_pos / maximum_range;
 }
@@ -71,14 +64,11 @@ void set_motor_speed(int _motor, float speed)
 }
 
 void update_drive () {
-	float forward_power = get_power_forward(get_joystick_axis(DriveSteer));
-	float steer_power = get_power_turning(get_joystick_axis(DriveForward));
+	float forward_power = get_power(get_joystick_axis(DriveSteer));
+	float steer_power = get_power(get_joystick_axis(DriveForward));
 
 	float left_power = forward_power + steer_power;
 	float right_power = forward_power - steer_power;
-
-	left_power = left_power * -1;
-	right_power = right_power * -1;
 
 	set_motor_speed(left_drive, left_power);
 	set_motor_speed(right_drive, right_power);
@@ -116,7 +106,7 @@ task main()
 			SetLiftPower(127);
 		}
 		else if (BtnArmDown){
-			SetLiftPower(127);
+			SetLiftPower(-127);
 		}
 		else {
 			SetLiftPower(0);
