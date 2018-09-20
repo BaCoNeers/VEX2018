@@ -113,13 +113,15 @@ void update_drive () {
 /*---------------------------------------------------------------------------*/
 
 //Autonomous varables
-float circumferenceWheel = 0.886;
+float circumferenceWheel = 0.916;
 float RobotOneDeg = 3.403;
 int LeftEncorderCount = 0;
 int RightEncoderCount = 0;
 
 void MoveForward(float distanceMM){
-	bool state = false;
+	SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	bool state = true;
 	int NumCounts = (int)(distanceMM/circumferenceWheel);
 	int direction = 1;
 	if(distanceMM < 0){
@@ -129,8 +131,8 @@ void MoveForward(float distanceMM){
 		LeftEncorderCount = SensorValue[driveEncoderLeft];
 		RightEncoderCount = SensorValue[driveEncoderRight];
 		if((LeftEncorderCount+RightEncoderCount)/2<NumCounts*direction){
-			motor[left_drive] = 60*direction;
-			motor[right_drive] = 60*direction;
+			motor[left_drive] = 127*direction;
+			motor[right_drive] = 84*direction;
 		}
 		else{
 			motor[left_drive] = 0;
@@ -142,19 +144,21 @@ void MoveForward(float distanceMM){
 	}
 }
 void TurnRobot(int degree){
-	float turingDistance = degrees*RobotOneDeg;
+	SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	float turingDistance = degree*RobotOneDeg;
 	int NumCounts = (int)(turingDistance/circumferenceWheel);
 	int direction = 1;
 	if(degree<0){
 		direction = -1;
 	}
-	bool state = false;
+	bool state = true;
 	while (state){
 		LeftEncorderCount = SensorValue[driveEncoderLeft];
 		RightEncoderCount = SensorValue[driveEncoderRight];
 		if(LeftEncorderCount < NumCounts*direction){
-			motor[left_drive] = 60*direction;
-			motor[right_drive] = -60*direction;
+			motor[left_drive] = 127*direction;
+			motor[right_drive] = -84*direction;
 		}
 		else{
 			motor[left_drive] = 0;
@@ -172,6 +176,8 @@ void pre_auton()
 	// running between Autonomous and Driver controlled modes. You will need to
 	// manage all user created tasks if set to false.
 	bStopTasksBetweenModes = true;
+	SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
 
 	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
 	// used by the competition include file, for example, you might want
@@ -202,7 +208,23 @@ task autonomous()
 	// ..........................................................................
 
 	// Remove this function call once you have "real" code.
-	AutonomousCodePlaceholderForTesting();
+	//AutonomousCodePlaceholderForTesting();
+	sleep(500);
+	SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	sleep(500);
+  MoveForward(500);
+  sleep(500);
+  SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	sleep(500);
+	TurnRobot(90);
+	sleep(500);
+	SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	sleep(500);
+	MoveForward(900);
+
 }
 
 /*---------------------------------------------------------------------------*/
