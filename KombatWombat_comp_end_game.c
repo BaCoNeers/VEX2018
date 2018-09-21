@@ -236,13 +236,13 @@ task autonomous()
 	sleep(500);
 	MoveForward(900);
 	*/
-  sleep(500);
+
+////Flags//////
+	sleep(500);
   SensorValue[driveEncoderLeft] = 0;
 	SensorValue[driveEncoderRight] = 0;
 	sleep(500);
 	MoveForward(1100);
-
-	////Flags//////
 
 }
 
