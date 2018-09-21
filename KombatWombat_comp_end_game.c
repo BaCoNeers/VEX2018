@@ -220,7 +220,7 @@ task autonomous()
 	//AutonomousCodePlaceholderForTesting();
 
   /////Platform/////
-  sleep(500);
+  /*sleep(500);
 	SensorValue[driveEncoderLeft] = 0;
 	SensorValue[driveEncoderRight] = 0;
 	sleep(500);
@@ -235,6 +235,12 @@ task autonomous()
 	SensorValue[driveEncoderRight] = 0;
 	sleep(500);
 	MoveForward(900);
+	*/
+  sleep(500);
+  SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	sleep(500);
+	MoveForward(1100);
 
 	////Flags//////
 
