@@ -142,7 +142,7 @@ void MoveForward(float distanceMM){
 	}
 }
 void TurnRobot(int degree){
-	float turingDistance = degrees*RobotOneDeg;
+	float turingDistance = degree*RobotOneDeg;
 	int NumCounts = (int)(turingDistance/circumferenceWheel);
 	int direction = 1;
 	if(degree<0){

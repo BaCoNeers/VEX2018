@@ -153,6 +153,59 @@ void claw_roll_update()
 	previous_claw_roll_button_state = current_claw_roll_button_state;
 }
 
+//Autonomous varables
+float circumferenceWheel = 0.886;
+float RobotOneDeg = 3.403;
+int LeftEncorderCount = 0;
+int RightEncoderCount = 0;
+
+void MoveForward(float distanceMM){
+	bool state = false;
+	int NumCounts = (int)(distanceMM/circumferenceWheel);
+	int direction = 1;
+	if(distanceMM < 0){
+		direction = -1;
+	}
+	while (state){
+		LeftEncorderCount = SensorValue[driveEncoderLeft];
+		RightEncoderCount = SensorValue[driveEncoderRight];
+		if((LeftEncorderCount+RightEncoderCount)/2<NumCounts*direction){
+			motor[left_drive] = 60*direction;
+			motor[right_drive] = 60*direction;
+		}
+		else{
+			motor[left_drive] = 0;
+			motor[right_drive] = 0;
+			SensorValue[driveEncoderLeft] = 0;
+			SensorValue[driveEncoderRight] = 0;
+			state = false;
+		}
+	}
+}
+void TurnRobot(int degree){
+	float turingDistance = degrees*RobotOneDeg;
+	int NumCounts = (int)(turingDistance/circumferenceWheel);
+	int direction = 1;
+	if(degree<0){
+		direction = -1;
+	}
+	bool state = false;
+	while (state){
+		LeftEncorderCount = SensorValue[driveEncoderLeft];
+		RightEncoderCount = SensorValue[driveEncoderRight];
+		if(LeftEncorderCount < NumCounts*direction){
+			motor[left_drive] = 60*direction;
+			motor[right_drive] = -60*direction;
+		}
+		else{
+			motor[left_drive] = 0;
+			motor[right_drive] = 0;
+			SensorValue[driveEncoderLeft] = 0;
+			SensorValue[driveEncoderRight] = 0;
+			state = false;
+		}
+	}
+}
 
 void pre_auton()
 {
