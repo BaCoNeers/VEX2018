@@ -149,11 +149,8 @@ void MoveForward(float distanceMM){
 	}
 }
 void TurnRobot(int degree){
-<<<<<<< HEAD
-=======
 	SensorValue[driveEncoderLeft] = 0;
 	SensorValue[driveEncoderRight] = 0;
->>>>>>> a954ef67411651eda7209938f61182ef55f4498d
 	float turingDistance = degree*RobotOneDeg;
 	int NumCounts = (int)(turingDistance/circumferenceWheel);
 	int direction = 1;
@@ -223,7 +220,7 @@ task autonomous()
 	//AutonomousCodePlaceholderForTesting();
 
   /////Platform/////
-  sleep(500);
+  /*sleep(500);
 	SensorValue[driveEncoderLeft] = 0;
 	SensorValue[driveEncoderRight] = 0;
 	sleep(500);
@@ -238,8 +235,14 @@ task autonomous()
 	SensorValue[driveEncoderRight] = 0;
 	sleep(500);
 	MoveForward(900);
+	*/
 
-	////Flags//////
+////Flags//////
+	sleep(500);
+  SensorValue[driveEncoderLeft] = 0;
+	SensorValue[driveEncoderRight] = 0;
+	sleep(500);
+	MoveForward(1100);
 
 }
 
